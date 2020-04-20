@@ -1,0 +1,5 @@
+INDEX VERSION 1.131
+C:\Users\Administrator\eclipse-workspace\springAndMVC\.metadata\.plugins\org.eclipse.jst.jsp.core\jspsearch\2704083930.index
+\dkscm\src\main\java
+C:\Users\Administrator\eclipse-workspace\springAndMVC\.metadata\.plugins\org.eclipse.jst.jsp.core\jspsearch\1223348880.index
+\springJieGuanMybatis\src\main\java

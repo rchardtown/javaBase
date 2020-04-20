@@ -1,0 +1,18 @@
+package cn.ekgc.dao;
+
+import java.util.List;
+
+import cn.ekgc.entity.User;
+
+public interface UserDao {
+	/**
+	 * <b>查询用户列表信息
+	 * @return
+	 */
+	List<User> getAllUsers();
+	
+	boolean saveUser(User user);
+
+	User getUserById(Long userId);
+
+}

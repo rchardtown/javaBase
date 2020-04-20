@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- beans 的命名空间和spring 的核心配置文件基本一样 -->
+<!-- 因为 AOP 和 IOC 一样都是spring 的核心功能，所以AOP的beans 在IOC的 beans基础上添加了一个命名空间 而已 -->
+<!-- 由于AOP的命名空间包含了IOC的命名空间，所以在一个xml 文件中 就可以完成IOc 和 AOP的全部功能 -->
+<!--  
+<beans xmlns="http://www.springframework.org/schema/beans"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		添加的命名空间:
+		xmlns:aop="http://www.springframework.org/schema/aop"
+		xsi:schemaLocation="http://www.springframework.org/schema/beans
+		 					http://www.springframework.org/schema/beans/spring-beans.xsd
+		 					//上面添加一个命名空间，这里添加一对schemaLocation
+		 					http://www.springframework.org/schema/aop
+		 					http://www.springframework.org/schema/aop/spring-aop.xsd
+		 "
+-->
+<!-- 说明：使用spring AOP时，要引入springAOP的依赖包  aspectjweaver 和 spring-aop -->
+<beans xmlns="http://www.springframework.org/schema/beans"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xmlns:aop ="http://www.springframework.org/schema/aop"
+		xsi:schemaLocation="http://www.springframework.org/schema/beans
+		 					http://www.springframework.org/schema/beans/spring-beans.xsd
+		 					http://www.springframework.org/schema/aop
+		 					http://www.springframework.org/schema/aop/spring-aop.xsd"  >
+	<!-- step 1：将需要整合的类进行注册，这里将UserDaoImpl 和 Logger 进行注册 -->
+	<bean id ="userDao" class ="cn.ekgc.spring.introductionDemo.aop.userDao.impl.UserDaoImpl" >
+		<property name="username" value="cuitao"></property>
+	</bean>
+	<bean id="logger" class="cn.ekgc.spring.introductionDemo.aop.Logger"/>
+	<!-- step2: 选则spring 两种代理模式 JDK（spring自带） 和   CGLIB 中合适的一个来反向代理 -->
+	<!--   对于JDK 的代理模式 ：
+		使用前提： 代理的类有接口，这里我们要方向代理的对象UserDaoImpl正好有接口，可以使用这种
+		实质：  把要代理类如UserDaoImpl 复制出来，比如取名为  UserDaoProxyImpl
+				(此时的UserDaoProxyImpl  同样也实现了接口 UserDao 的功能)
+			     再在UserDaoProxyImpl中添加上Logger的功能，
+			     当使用代理后，创建UserDaoImpl 的对象时，实质是创建了UserDaoProxyImpl 的对象。 
+				UserDaoProxyImpl 这个UserDao 的实现类，即包含了源码UserDaoImpl 的代码，
+				又添加了Loggeer的代码， 使得原来程序的功能动增加
+	-->     
+	 <!--对于CGLIB 的代理模式 ：
+	 	特点： 不需要要代理的类再有接口的前提，也就是说，要代理的哪个类就直接代理
+	 -->
+	 
+	 <!--  对于spring 来说，因为JDK 毕竟是spring 自带的，所以默认使用的是JDK的代理模式	 -->
+	<!--下例是JDK的代理模式 -->
+	<aop:config>
+		<!-- 要代理的对象（切点）：指出要给哪个类的哪个方法做代理，俗称找切点 -->	
+		<aop:pointcut expression="execution(* cn.ekgc.spring.introductionDemo.aop.userDao.impl.UserDaoImpl.saveUser())" id="mypoint"/>
+	 	<!-- 指出要将哪个对象添加的代理对象的什么位置 -->
+	 	<!-- ref: 指出要添加的对象  method :指出要添加该对象的哪个方法     aop:before ：指出该方法要添加到切点的什么位置	  pointcut-ref :用来关联切点和要添加的方法		 -->	
+	 	<aop:aspect id="myaspect" ref="logger">
+	 		<aop:before method="beforeLoger" pointcut-ref="mypoint"/>
+	 		<aop:after method="afterLogger" pointcut-ref="mypoint"/>
+	 	</aop:aspect>
+	 	<!-- 解释： spring 程序在执行到expression 匹配的方法时，停下来先不往下执行，通过id值：mypoint 查找到  关联的 pointcut-ref 对应的 切面（要插入的对象），
+	 				一路通过  ref="logger"  method="beforeLoger"  aop:before 明确要插入哪个对象的哪个方法，在切点的切面插入 
+	 				然后，spring 根据这些要求的顺序执行：  先执行logger 对象的beforeLoger方法，再执行切点的代码
+	 	 -->	
+	</aop:config>
+	
+
+	
+	<!--   附加 ： 关于代理对象表达式的理解：  
+	<aop:pointcut expression="execution(* cn.ekgc.sm.dao.UserDao..*.*(..))" id="mypointCut"/>
+		   *           cn.ekgc.sm.dao.UserDao   ..          *        .   *       (      ..        )
+		 返回值类型              包结构                                包及其子包     类名称                方法名     参数列表可有可无，可多个     
+	-->
+	
+
+
+</beans>

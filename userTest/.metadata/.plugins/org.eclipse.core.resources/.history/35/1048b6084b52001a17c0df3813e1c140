@@ -1,0 +1,32 @@
+package cn.ekgc.dao.impl;
+
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
+
+import cn.ekgc.dao.UserDao;
+import cn.ekgc.entity.User;
+import cn.ekgc.util.ConnectionUtil;
+
+public class UserDaoImpl implements UserDao{
+	Connection connection =ConnectionUtil.getConnection();
+	/**
+	 * 查询用户列表信息
+	 */
+	@Override
+	public List<User> getAllUsers() {
+		List<User> userList = new ArrayList<User>();
+		//SQL
+		String sql ="select user_id ,username ,cellphone from sys_user";
+		try {
+			Statement statement =connection.createStatement();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return userList;
+	}
+}

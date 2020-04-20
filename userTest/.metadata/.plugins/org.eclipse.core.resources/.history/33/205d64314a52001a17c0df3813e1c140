@@ -1,0 +1,16 @@
+package cn.ekgc.service.impl;
+
+import java.util.List;
+
+import cn.ekgc.entity.User;
+import cn.ekgc.service.UserService;
+
+public class UserServiceImpl implements UserService{
+	private UserDao userDao;
+	@Override
+	public List<User> findAllUsers() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+}

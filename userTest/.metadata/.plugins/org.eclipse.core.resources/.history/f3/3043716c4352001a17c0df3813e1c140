@@ -1,0 +1,5 @@
+package cn.ekgc.entity;
+
+public class User {
+
+}

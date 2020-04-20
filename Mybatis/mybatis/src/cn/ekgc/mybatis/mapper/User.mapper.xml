@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 映射关系配置文件的 约束标签的 方式还是dtd, but 它和Mybatis核心配置文件mybatis-confoig.xml的命名空间完全不一样 
+	两种命名空间都是在 Mybatis的 官方文档中找的 -->
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<!-- mapper 文件实质就是 userDaoImpl 文件的功能，底层是实现了sql 的执行 -->
+
+
+
+<!-- namespace: 指定这个mapper文件是哪个实体类和它对应库表的映射关系,是这张映射文件的唯一标识 -->
+<mapper namespace="userMapper">
+	<!--**************************** 插入操作 [start]**************************** -->
+	<!-- parameterType:指定存储的对象类型 -->
+	<insert id="saveUser"
+		parameterType="cn.ekgc.mybatis.entity.User">
+		<!-- 设定sql -->
+		<!-- #{传入的参数实质是parameterType对应的实体类的实例变量} 这里是哪个实例变量就直接些哪个，没人给它传递。自动的从User 
+			实体类中加载 换句话说调用saveUser 这个方法时，传递的参数只是 User 类的一个对象,比如 User user =new User();中的user 
+			username， cellphone 等参数自动的从User 对应的实体类中加载对应的属性作为自己的赋值 -->
+		insert into sys_user
+		(username,cellphone)values(#{username},#{cellphone});
+	</insert>
+	<!--**************************** 插入操作 [end]**************************** -->
+	<!--**************************** 更新操作 [start]**************************** -->
+	<update id="updateUser"
+		parameterType="cn.ekgc.mybatis.entity.User">
+		update sys_user set username=#{username}
+		,cellphone=#{cellphone} where
+		user_id = #{userId};
+	</update>
+	<!--**************************** 删除操作 [end]**************************** -->
+	<!--**************************** 删除操作 [start]**************************** -->
+
+	<delete id="deleteUserById" parameterType="java.lang.Long">
+		delete from sys_user
+		where user_id=#{userId};
+	</delete>
+	<!--**************************** 删除操作 [end]**************************** -->
+	<!--**************************** 查询操作 [start]**************************** -->
+	<!-- 查询操作与其他操作不同在于，它得到一个结果集，此时需要告知Mybatis 该结果集和哪个实体类匹配， 并进一步告知结果集中的字段和实体类的属性的匹配关系 -->
+	<select id="findAllUsers" resultMap="userMap">
+		select user_id ,username,cellphone  from sys_user;
+	</select>
+	<!-- type：指出结果集和哪个实体类匹配，id 负责和结果集关联 -->
+	<resultMap type="cn.ekgc.mybatis.entity.User" id="userMap">
+		<!-- property指的是：实体类的属性，javaType：该属性的类型，column ：对应的结果集中的字段（该字段还不等于数据库中字段，没有别名时相等，有别名时是别名） -->
+		<!-- 进一步指定指出 结果集中的字段和实体类的属性的匹配关系 -->
+		<id property="userId" javaType="java.lang.Long" column="user_id" />
+		<result property="username" javaType="java.lang.String"
+			column="username" />
+		<result property="cellphone" javaType="java.lang.String"
+			column="cellphone" />
+		
+	</resultMap>
+	<!--**************************** 查询操作 [end]**************************** -->
+
+
+</mapper>

@@ -1,0 +1,35 @@
+package cn.ekgc.service.impl;
+
+import java.util.List;
+
+import cn.ekgc.dao.UserDao;
+import cn.ekgc.entity.User;
+import cn.ekgc.service.UserService;
+
+public class UserServiceImpl implements UserService{
+	private UserDao userDao;
+	@Override
+	public List<User> findAllUsers() {
+		// TODO Auto-generated method stub
+		return userDao.getAllUsers();
+	}
+	/**
+	 * <b>添加用户信息</b>
+	 */
+	@Override
+	public boolean saveUser(User user) {
+		
+		return userDao.saveUser(user);
+	}
+	@Override
+	public User findUserById(String string) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Override
+	public User findUserById(Long userId) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+}

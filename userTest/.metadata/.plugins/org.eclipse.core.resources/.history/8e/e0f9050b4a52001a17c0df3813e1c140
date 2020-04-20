@@ -1,0 +1,5 @@
+package cn.ekgc.service;
+
+public interface UserService {
+
+}

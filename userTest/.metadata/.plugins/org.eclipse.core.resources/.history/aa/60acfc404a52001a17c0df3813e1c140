@@ -1,0 +1,11 @@
+package cn.ekgc.dao;
+
+import java.util.List;
+
+import cn.ekgc.entity.User;
+
+public interface UserDao {
+
+	List<User> getAllUsers();
+
+}

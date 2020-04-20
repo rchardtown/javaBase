@@ -1,0 +1,7 @@
+package cn.ekgc.service.impl;
+
+import cn.ekgc.service.UserService;
+
+public class UserServiceImpl implements UserService{
+
+}

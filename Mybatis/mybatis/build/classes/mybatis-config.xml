@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- xml 为可扩展的标记语言，其中的标签随便写，为了约束标签的，规范化书写标签，以便每个人写的可以相互识别，用了两种约束 schema 和 
+	dtd mybatis 的配置 文件用到了 dtd 来约束其中的标签 -->
+	
+ <!DOCTYPE configuration  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-config.dtd">
+ 
+ 
+ <!-- 设置 Mybatis 连接上数据库 、java对象和数据库二维表之间相互转换-->
+<configuration>
+	<properties resource="jdbc.properties">
+		<!-- 如果要添加jdbc.propertites中没有的信息，可以在property中添加 -->
+		<property name="" value=""/>
+	</properties>
+<!-- environments 用来指定连接什么样的数据库  -->
+	<environments default="environments">
+		<environment id="environments">
+		<!-- 指定事物处理方式采用JDBC的事物处理方式：JDBC自动处理事务， 每写一句sql JDBC自己处理事物 -->
+			<transactionManager type="JDBC" />
+			<!-- dataSource 用于加载数据库，也就加载JDBC的四个基本信息 -->
+			<!-- POOLED：数据库连接池
+				在ORM框架种提出数据源的概念，中概念在于数据库连接池。
+				对于JDBC来说，通过url ,username,password再连接数据库获得Connection对象的时候，‘
+				会消耗大连的资源，因此之前我们在创建JDBC时，采用了ConnectionUtil类，借助于单例模式来实现。
+				但是，一旦并发量很大，大量的线程需要等着连接数据库，那么Connectiono对象同一时间在单例模式下只有一个，
+				效率很低。
+				为了提高效率，在项目启动的时候，就创建了多个Connection对象，保存起来，等着使用。将保存这些Connection
+				对象的地址，就成为资源链接池，用POOLED 表示。
+			 -->
+			<dataSource type="POOLED">
+				<property name="driver" value="${jdbc.driverClass}"/>			
+				<property name="url" value="${jdbc.url}"/>			
+				<property name="username" value="${jdbc.username}"/>			
+				<property name="password" value="${jdbc.password}"/>			
+			</dataSource>
+		</environment>
+	
+	</environments>
+		<!-- 因为mybatis只识别这一个唯一的配置文件，所以要将所有的mapper文件位置在该文件中配置 -->
+	<mappers>
+		<mapper resource="cn/ekgc/mybatis/mapper/User.mapper.xml"/>
+	</mappers>
+</configuration>
+

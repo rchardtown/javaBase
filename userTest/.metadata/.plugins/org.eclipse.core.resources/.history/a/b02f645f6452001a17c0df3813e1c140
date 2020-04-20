@@ -1,0 +1,118 @@
+package cn.ekgc.controller;
+
+import java.io.IOException;
+import java.util.List;
+
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import cn.ekgc.entity.User;
+import cn.ekgc.service.UserService;
+
+public class UserController extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+	private UserService userService;
+
+	@Override
+	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		// 设置编码格式
+		request.setCharacterEncoding("UTF-8");
+		response.setCharacterEncoding("UTF-8");
+
+		// 截取uri
+		String uri = request.getRequestURI().substring(request.getRequestURI().lastIndexOf("/"));
+		// 分发uri
+
+		if ("/list".equals(uri)) {
+			// 查询用户列表
+			List<User> userList = userService.findAllUsers();
+			// 加载到请求中
+			request.setAttribute("userList", userList);
+			// 通过dispatcher 进行转发
+			RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/view/user/lis.jsp");
+			dispatcher.forward(request, response);
+		} else if ("/add".equals(uri)) {
+			// 转发到添加页面
+			// dispatcher 调度
+			RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/view/user/add.jsp");
+			dispatcher.forward(request, response);
+		} else if ("/update".equals(uri)) {
+			// 修改用户信息
+			// 通过id 查询
+			Long userId = Long.parseLong(request.getParameter("user_id"));
+			User user = userService.findUserById(userId);
+			// 加载到请求中
+			request.setAttribute("user", user);
+			// 转发到查询页面
+			RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/view/user/update.jsp");
+			dispatcher.forward(request, response);
+
+		}else if ("/delete".equals(uri)) {
+			//删除用户信息
+			//根据id删除
+			Long userId =Long.parseLong(request.getParameter("id"));
+		}
+
+	}
+
+	@Override
+	protected void doPost(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		// 设置编码格式
+		request.setCharacterEncoding("UTF-8");
+		response.setCharacterEncoding("UTF-8");
+
+		// 截取uri
+		String uri = request.getRequestURI().substring(request.getRequestURI().lastIndexOf("/"));
+		if ("/add".equals(uri)) {
+			// 获取参数
+			String username = request.getParameter("username");
+			String cellphone = request.getParameter("cellphone");
+			// 对提交的数据鉴别
+			if (username != null && "".equals(username.trim()) && cellphone != null && "".equals(cellphone.trim())) {
+				// 数据封装
+				User user = new User();
+				user.setUsername(username);
+				user.setCellphone(cellphone);
+				// 保存
+				boolean flag = userService.saveUser(user);
+				if (flag) {
+					response.sendRedirect(request.getContextPath() + "/user/list");
+				} else {
+					response.sendRedirect(request.getContextPath() + "/user/add");
+				}
+			}
+
+		} else if ("/update".equals(uri)) {
+			// 修改用户信息
+
+			// 获取参数
+			Long userId = Long.parseLong(request.getParameter("userId"));
+			String username =request.getParameter("username");
+			String cellphone =request.getParameter("cellphone");
+			// 鉴定参数
+			if (username !=null && !"".equals(username.trim()) && cellphone != null && !"".equals(cellphone)) {
+				// 封装参数
+				User user = new User();
+				user.setUserId(userId);
+				user.setUsername(username);
+				user.setCellphone(cellphone);
+				
+				// 保存
+				boolean flag =userService.update(user);
+				// 重定向到结果相应得页面
+				if (flag) {
+					response.sendRedirect(request.getContextPath()+"/user/list");
+					return ;
+				}else {
+					response.sendRedirect(request.getContextPath()+"/user/update");
+				}
+			}
+			
+		}
+	}
+}
